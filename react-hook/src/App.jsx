@@ -1,45 +1,90 @@
-import { useEffect, useState, createContext , useContext } from 'react'
-import logo from './logo.svg'
-import './App.css'
+import { useEffect, useState, createContext, useContext, useRef } from "react";
+import logo from "./logo.svg";
+import "./App.css";
 //provider ผู้ให้ข้อมูล
 const UserContext = createContext();
+//useRef
 
 function App() {
   //useState
-  const [count, setCount] = useState(1)
-  const [name, setName] = useState('Miler Dev');
+  const [count, setCount] = useState(0);
+  const [name, setName] = useState("Miler Dev");
   //useEffect
   const [data, setData] = useState([]);
   //useContext
-  const [user, setUser] = useState('JK369')
+  const [user, setUser] = useState("JK369");
+  //useRef
+  const [inputValue, setInputValue] = useState("");
+  const countCurrent = useRef(0);
+  //useRefDOM
+  const inputElement = useRef();
+  //useRefKeepTag
+  const [inputTag, setInputTag] = useState("");
+  const previousInputValue = useRef("");
 
   useEffect(() => {
-    fetch(`https://jsonplaceholder.typicode.com/users/${count}`)
-        .then(res => res.json()) //json to java oop
-        .then(data => setData(data)); //setData
-  }, [count]);
+    previousInputValue.current = inputTag;
+  }, [inputTag]);
 
-  console.log(data);
+  const focusInput = () => {
+    inputElement.current.focus();
+  };
+
+  useEffect(() => {
+    countCurrent.current = countCurrent.current + 1 ;
+  });
+
+  // useEffect(() => {
+  //   fetch(`https://jsonplaceholder.typicode.com/users/${count}`)
+  //     .then((res) => res.json()) //json to java oop
+  //     .then((data) => setData(data)); //setData
+  // }, [count]);
+
+  // console.log("", data);
 
   return (
     //ส่งค่า value จาก user ที่รับมาจาก setUser
+    
     <UserContext.Provider value={user}>
+   
+      <input
+            type="text"
+            value={inputTag}
+            noChange={(e) => setInputTag(e.target.value)}
+          />
+          <h2>Current Value : {inputTag}</h2>
+          <h2>Previous Value :{previousInputValue.current}</h2>
+   
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>Hello {name}</p>
         <p>{count}</p>
-        <ChildComponent/>
+        <ChildComponent />
+      
         <p>
-        <button type="button" onClick={() => setUser(`Jakkarin Ninpan${count}`)}>
-          Change Name
+          <input
+            type="text"
+            ref={inputElement}
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+          />
+          <h1>Render Count: {countCurrent.current}</h1>
+          <button type="button" onClick={focusInput}>
+            Focus
+          </button>
+          <button
+            type="button"
+            onClick={() => setUser(`Jakkarin Ninpan${count}`)}
+          >
+            Change Name
           </button>
           <button type="button" onClick={() => setCount((count) => count + 1)}>
-            Increase 
+            Increase
           </button>
-          <button type='button' onClick={() => setCount((count) => count - 1)}>
-            Decrease 
+          <button type="button" onClick={() => setCount((count) => count - 1)}>
+            Decrease
           </button>
-          <button type='button' onClick={() => setName('Jakkarin Ninpan')}>
+          <button type="button" onClick={() => setName("Jakkarin Ninpan")}>
             SetName
           </button>
         </p>
@@ -67,16 +112,17 @@ function App() {
         </p>
       </header>
     </UserContext.Provider>
-
-  )
+  );
 }
 
-function ChildComponent (){
+function ChildComponent(){
   //ผู้รับ รับมาจาก createContext
-  const user = useContext(UserContext)
-  return(
-      <> 
+  const user = useContext(UserContext);
+  return (
+    <>
       <h1>Name : {user}</h1>
-      </>  
-)}
-export default App
+    </>
+  );
+}
+
+export default App;

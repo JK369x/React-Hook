@@ -22,6 +22,7 @@
 ---
 
 ## useState Hook🪝
+จะมีการ component rerender
 useState can set and send 
 - Hook useState return be Array 
 
@@ -49,3 +50,5 @@ const [count, setCount] = useState(0)
    
     const user = useContext(UserContext);
 
+## useRef
+    เก็บค่าคงค่าระหว่าง render จะให้ component ไม่ rerender เมื่อมีการ update ข้อมูล
